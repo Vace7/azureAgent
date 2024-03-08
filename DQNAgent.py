@@ -12,8 +12,6 @@ from tensorflow.python.keras.layers import Dense
 from collections import deque
 
 import random
-import time
-import os
 
 class DQN(Model):
     def __init__(self):
