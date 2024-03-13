@@ -13,7 +13,6 @@ import subprocess
 
 app = FastAPI()
 agent = Agent()
-subprocess.Popen(["tensorboard","--logdir",os.path.join(os.getcwd(),"logs"),"--host","0.0.0.0","--port","6007"])
 
 class LogSample(BaseModel):
     step : int
@@ -82,6 +81,12 @@ def log(logsample: LogSample):
               episode_reward_max=logsample.episode_reward_max, 
               epsilon=logsample.epsilon)
     return "ok"
+
+@app.post("/downloadlogs")
+def downloadlogs():
+    name = "logs"
+    make_archive(name, 'zip', name)
+    return FileResponse(path=os.path.join(os.getcwd(),f"{name}.zip"), filename=f"{name}.zip", media_type="application/zip")
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000, workers=1)
