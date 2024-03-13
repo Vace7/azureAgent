@@ -9,9 +9,18 @@ import uvicorn
 import os
 
 from DQNAgent import Agent
+import subprocess
 
 app = FastAPI()
 agent = Agent()
+subprocess.Popen(["tensorboard","--logdir",os.path.join(os.getcwd(),"logs"),"--host","0.0.0.0","--port","6007"])
+
+class LogSample(BaseModel):
+    step : int
+    episode_reward_mean: float
+    episode_reward_min: int
+    episode_reward_max: int
+    epsilon: float
 
 class Sample(BaseModel):
     state: list[float]
@@ -65,6 +74,15 @@ def savemodel(name : str):
     agent.load(name)
     return "ok"
 
+@app.post("/log")
+def log(logsample: LogSample):
+    agent.log(step=logsample.step, 
+              episode_reward_mean=logsample.episode_reward_mean, 
+              episode_reward_min=logsample.episode_reward_min, 
+              episode_reward_max=logsample.episode_reward_max, 
+              epsilon=logsample.epsilon)
+    return "ok"
+
 if __name__ == '__main__':
-    # uvicorn.run(app, host='0.0.0.0', port=8000)
     uvicorn.run(app, host='0.0.0.0', port=8000, workers=1)
+    # uvicorn.run(app, host='127.0.0.1', port=8000, workers=1)

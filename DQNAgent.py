@@ -12,6 +12,7 @@ from tensorflow.python.keras.layers import Dense
 from collections import deque
 
 import random
+import datetime
 
 class DQN(Model):
     def __init__(self):
@@ -42,6 +43,7 @@ class Agent:
         self.episodes = 0
 
         self.memory = deque(maxlen=2000)
+        self.logger = tf.summary.create_file_writer(f"logs/cartpole-dqn-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}")
 
     def next_episode(self):
         self.episodes += 1
@@ -66,6 +68,12 @@ class Agent:
     def load(self, name):
         self.dqn_target = load_model(name)
         self.dqn_model = load_model(name)
+    
+    def log(self, step, **stats):
+        with self.logger.as_default():
+            for key, value in stats.items():
+                tf.summary.scalar(key, value, step = step)
+                self.logger.flush()
         
     def update(self):
         if len(self.memory) > self.batch_size:
