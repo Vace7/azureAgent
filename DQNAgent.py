@@ -29,7 +29,6 @@ class DQN(Model):
 
 class Agent:
     def __init__(self):
-        # hyper parameters
         self.lr =0.001
         self.gamma = 0.99
 
