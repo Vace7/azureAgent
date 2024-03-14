@@ -9,7 +9,6 @@ import uvicorn
 import os
 
 from DQNAgent import Agent
-import subprocess
 
 app = FastAPI()
 agent = Agent()
