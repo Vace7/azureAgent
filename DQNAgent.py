@@ -69,10 +69,10 @@ class Agent:
         self.dqn_target = load_model(name)
         self.dqn_model = load_model(name)
     
-    def log(self, step, **stats):
+    def log(self, **stats):
         with self.logger.as_default():
             for key, value in stats.items():
-                tf.summary.scalar(key, value, step = step)
+                tf.summary.scalar(key, value, step = self.episodes)
                 self.logger.flush()
         
     def update(self):

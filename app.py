@@ -14,7 +14,6 @@ app = FastAPI()
 agent = Agent()
 
 class LogSample(BaseModel):
-    step : int
     episode_reward_mean: float
     episode_reward_min: int
     episode_reward_max: int
@@ -74,8 +73,7 @@ def savemodel(name : str):
 
 @app.post("/log")
 def log(logsample: LogSample):
-    agent.log(step=logsample.step, 
-              episode_reward_mean=logsample.episode_reward_mean, 
+    agent.log(episode_reward_mean=logsample.episode_reward_mean, 
               episode_reward_min=logsample.episode_reward_min, 
               episode_reward_max=logsample.episode_reward_max, 
               epsilon=logsample.epsilon)
