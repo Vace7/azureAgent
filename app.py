@@ -29,7 +29,7 @@ class Sample(BaseModel):
 
 @app.post("/")
 def home():
-    return "ok"
+    return "ok_lah"
 
 @app.post("/action")
 def action(sample: Sample):
